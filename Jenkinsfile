@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "yarishawn/exam:latest"
-        K8S_NODE = "172.31.21.73"
+        K8S_NODE = "54.175.19.157"
     }
 
     stages {
