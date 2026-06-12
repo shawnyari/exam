@@ -37,3 +37,17 @@ pipeline {
         }
     }
 }
+
+stage('Deploy to Kubernetes') {
+    steps {
+        sh '''
+        ssh -o StrictHostKeyChecking=no ubuntu@172.31.21.73
+        kubectl set image deployment/exam-app exam=yarishawn/exam:latest || kubectl create deployment exam-app --image=yarishawn/exam:latest
+        kubectl expose deployment exam-app --type=NodePort --port=5000 --target-port=5000 || true
+        kubectl rollout status deployment/exam-app
+        kubectl get pods
+        kubectl get svc
+        "
+        '''
+    }
+}
