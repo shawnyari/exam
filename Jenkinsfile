@@ -3,15 +3,10 @@ pipeline {
 
     environment {
         IMAGE_NAME = "yarishawn/exam:latest"
+        K8S_NODE = "172.31.21.73"
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                echo 'Code checked out from GitHub'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t $IMAGE_NAME .'
@@ -35,19 +30,19 @@ pipeline {
                 }
             }
         }
-    }
-}
 
-stage('Deploy to Kubernetes') {
-    steps {
-        sh '''
-        ssh -o StrictHostKeyChecking=no ubuntu@172.31.21.73
-        kubectl set image deployment/exam-app exam=yarishawn/exam:latest || kubectl create deployment exam-app --image=yarishawn/exam:latest
-        kubectl expose deployment exam-app --type=NodePort --port=5000 --target-port=5000 || true
-        kubectl rollout status deployment/exam-app
-        kubectl get pods
-        kubectl get svc
-        "
-        '''
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                ssh -o StrictHostKeyChecking=no ubuntu@$K8S_NODE "
+                kubectl set image deployment/exam-app exam-app=$IMAGE_NAME || kubectl create deployment exam-app --image=$IMAGE_NAME
+                kubectl expose deployment exam-app --type=NodePort --port=5000 --target-port=5000 || true
+                kubectl rollout status deployment/exam-app
+                kubectl get pods
+                kubectl get svc
+                "
+                '''
+            }
+        }
     }
 }
