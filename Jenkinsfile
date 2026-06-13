@@ -1,7 +1,6 @@
 pipeline {
 agent { label 'docker' }
 
-```
 environment {
     IMAGE_NAME = "yarishawn/exam:latest"
 }
@@ -32,19 +31,16 @@ stages {
         }
     }
 
-    stage('Deploy to Kubernetes') {
-        steps {
-            sh '''
-            ssh -i /root/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@54.175.19.157 "
-            kubectl get nodes
-            kubectl get pods
-            kubectl get svc
-            "
-            '''
-        }
+   stage('Deploy to Kubernetes') {
+    steps {
+        sh '''
+        ssh -i /root/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@54.175.19.157 "
+        kubectl get nodes
+        kubectl get pods
+        kubectl get svc
+        "
+        '''
     }
 }
-```
-
 }
-
+}
