@@ -32,17 +32,13 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
-            steps {
-                sh '''
-                ssh -o StrictHostKeyChecking=no ubuntu@$K8S_NODE "
-                kubectl set image deployment/exam-app exam-app=$IMAGE_NAME || kubectl create deployment exam-app --image=$IMAGE_NAME
-                kubectl expose deployment exam-app --type=NodePort --port=5000 --target-port=5000 || true
-                kubectl rollout status deployment/exam-app
-                kubectl get pods
-                kubectl get svc
-                "
-                '''
-            }
-        }
+    steps {
+        sh '''
+        ssh -i /root/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@54.175.19.157 "
+        kubectl get nodes
+        kubectl get pods
+        kubectl get svc
+        "
+        '''
     }
 }
