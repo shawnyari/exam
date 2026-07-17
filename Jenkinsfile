@@ -4,7 +4,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE = 'shawnyari/project'
+        DOCKER_IMAGE = 'yarishawn/project'
     }
 
     stages {
