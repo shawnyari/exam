@@ -11,7 +11,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t shawnyari/exam:latest .'
+                sh 'docker build -t yarishawn/exam:latest .'
             }
         }
 
@@ -19,7 +19,7 @@ pipeline {
             steps {
                 sh '''
                 docker rm -f exam-test || true
-                docker run -d -p 5000:5000 --name exam-test shawnyari/exam:latest
+                docker run -d -p 5000:5000 --name exam-test yarishawn/exam:latest
                 sleep 3
                 curl http://localhost:5000
                 docker rm -f exam-test
@@ -36,7 +36,7 @@ pipeline {
                 )]) {
                     sh '''
                     echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                    docker push shawnyari/exam:latest
+                    docker push yarishawn/exam:latest
                     '''
                 }
             }
