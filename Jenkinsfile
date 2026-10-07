@@ -41,5 +41,31 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                ssh -o StrictHostKeyChecking=no ubuntu@34.201.21.117 '
+                    kubectl create deployment exam-app \
+                    --image=yarishawn/exam:latest \
+                    --dry-run=client -o yaml | kubectl apply -f -
+
+                    kubectl set image deployment/exam-app \
+                    exam-app=yarishawn/exam:latest
+
+                    kubectl expose deployment exam-app \
+                    --type=NodePort \
+                    --port=5000 \
+                    --target-port=5000 \
+                    --name=exam-service \
+                    --dry-run=client -o yaml | kubectl apply -f -
+
+                    kubectl rollout status deployment/exam-app
+                    kubectl get pods
+                    kubectl get svc exam-service
+                '
+                '''
+            }
+        }
     }
 }
